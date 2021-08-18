@@ -1,3 +1,6 @@
 class EventsController < ApplicationController
-  # events_controller
+  def index
+    # イベントデータの一覧を返す
+    render json: Event.all
+  end
 end
