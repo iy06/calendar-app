@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const apiUrl = 'http://localhost:3000';
+
 // 状態管理するデータを定義する
 const state = {
   events: [],
@@ -16,14 +17,8 @@ const getters = {
         end: new Date(event.end),
       };
     }),
-  event: (state) =>
-    state.event
-      ? {
-          ...state.event,
-          start: new Date(state.event.start),
-          end: new Date(state.event.end),
-        }
-      : null,
+
+  event: (state) => (state.event ? { ...state.event, start: new Date(state.event.start), end: new Date(state.event.end) } : null),
 };
 // eventsデータをstateに保存する関数を定義する
 const mutations = {

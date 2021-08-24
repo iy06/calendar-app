@@ -9,6 +9,9 @@
       <v-btn icon @click="$refs.calendar.next()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
+      <v-btn outlined small class="ma-4" @click="fetchEvents">
+        クリック
+      </v-btn>
     </v-sheet>
 
     <v-sheet height="94vh">
@@ -17,22 +20,11 @@
 
     <v-dialog :value="event !== null">
       <div v-if="event !== null">
-        <v-card>
-          <h1>予定詳細</h1>
-          <p>name: {{ event.name }}</p>
-          <p>start: {{ event.start.toLocaleString() }}</p>
-          <p>end: {{ event.end.toLocaleString() }}</p>
-          <p>timed: {{ event.timed }}</p>
-          <p>description: {{ event.description }}</p>
-          <p>: {{ event.color }}</p>
-        </v-card>
+
       </div>
     </v-dialog>
   </div>
 </template>
-
-// メモ // 下記の記述は必要なのか？ // :day-format="(timestamp) => new Date(timestamp.date).getDate()" // :month-format="(timestamp) => new
-Date(timestamp.date).getMonth()"
 
 <script>
 import { format } from 'date-fns';
@@ -42,7 +34,7 @@ export default {
   name: 'Calendar',
   data() {
     return {
-      // 表示する月を指定
+      // 表示する月を指定r
       value: format(new Date(), 'yyyy/MM/dd'),
       dialogMessage: '',
     };
@@ -59,7 +51,6 @@ export default {
       this.value = format(new Date(), 'yyyy/MM/dd');
     },
     showEvent({ event }) {
-      console.log(event);
       this.setEvent(event);
     },
   },
