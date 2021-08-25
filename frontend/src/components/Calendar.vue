@@ -15,7 +15,7 @@
       >
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-toolbar-title>{{ titleMonth }}</v-toolbar-title>
       <v-btn
         icon
         @click="$refs.calendar.next()"
@@ -40,59 +40,7 @@
       @click:outside="closeDialog"
       width="600"
     >
-      <div v-if="event !== null">
-        <v-card class="pb-12">
-
-          <v-card-actions class="d-flex justify-end pa-2">
-            <v-btn
-              icon
-              @click="closeDialog"
-            >
-              <v-icon size="20px">mdi-close</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-card-title>
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon
-                  size="20px"
-                  :color="event.color || 'blue'"
-                >
-                mdi-square
-                </v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.name }}
-              </v-col>
-            </v-row>
-          </v-card-title>
-
-          <v-card-text >
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon size="20px">
-                  mdi-clock-time-three-outline
-                </v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.start.toLocaleString() }} ~ {{ event.end.toLocaleString() }}
-              </v-col>
-            </v-row>
-          </v-card-text>
-
-          <v-card-text>
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon size="20px">mdi-card-text-outline</v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.description || 'no description' }}
-              </v-col>
-            </v-row>
-          </v-card-text>
-
-        </v-card>
-      </div>
+      <EventDetailDialog v-if="event !== null" />
     </v-dialog>
   </div>
 </template>
@@ -100,19 +48,22 @@
 <script>
 import { format } from 'date-fns';
 import { mapGetters, mapActions } from 'vuex';
+import EventDetailDialog from './EventDetailDialog.vue';
 
 export default {
   name: 'Calendar',
+  components: {
+    EventDetailDialog,
+  },
   data() {
     return {
-      // 表示する月を指定r
+      // 表示する月を指定する。
       value: format(new Date(), 'yyyy/MM/dd'),
-      dialogMessage: '',
     };
   },
   computed: {
     ...mapGetters('events', ['events', 'event']),
-    title() {
+    titleMonth() {
       return format(new Date(this.value), 'yyyy年M月');
     },
   },

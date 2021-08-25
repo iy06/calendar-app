@@ -7,24 +7,31 @@ const state = {
   events: [],
   event: null,
 };
+
 // stateの値を取り出す関数を定義する
 const getters = {
-  events: (state) =>
-    state.events.map((event) => {
+  //すべての予定をDate型に修正し取得する。
+  events: (state) => state.events.map((event) => {
       return {
         ...event,
         start: new Date(event.start),
         end: new Date(event.end),
       };
     }),
-
-  event: (state) => (state.event ? { ...state.event, start: new Date(state.event.start), end: new Date(state.event.end) } : null),
+  // クリックされた予定をDate型に修正し取得する。
+  event: (state) => state.event ? {
+    ...state.event,
+    start: new Date(state.event.start),
+    end: new Date(state.event.end)
+  } : null,
 };
+
 // eventsデータをstateに保存する関数を定義する
 const mutations = {
   setEvents: (state, events) => (state.events = events),
   setEvent: (state, event) => (state.event = event),
 };
+
 // axiosでAPIリクエストを送信してeventsデータを取得し、mutationを呼び出す関数を定義する
 const actions = {
   async fetchEvents({ commit }) {
