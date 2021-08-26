@@ -9,33 +9,58 @@
       <DialogSection icon="mdi-square" :color="event.color || 'blue'">
         <v-text-field v-model="name" label="タイトル"></v-text-field>
       </DialogSection>
+      <DialogSection icon="mid-clock-outline">
+        <DateForm v-model="startDate" />
+        <DateForm v-model="endDate" />
+      </DialogSection>
     </v-card-text>
+    <v-card-actions class="d-flex justify-end">
+      <v-btn @click="submit">作成</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import DialogSection from './DialogSection.vue';
+import DateForm from './DateForm.vue';
+import { format } from 'date-fns';
 
 export default {
   name: 'EventFormDialog',
   components: {
     DialogSection,
+    DateForm,
   },
   data() {
     return {
       name: '',
+      startDate: null,
+      endDate: null,
     }
+  },
+  created() {
+    this.startDate = format(this.event.start, 'yyyy/MM/dd');
+    this.endDate = format(this.event.end, 'yyyy/MM/dd');
   },
   computed: {
     ...mapGetters('events', ['event'])
   },
   methods: {
-    ...mapActions('events', ['setEvent', 'setEditMode']),
+    ...mapActions('events', ['setEvent', 'setEditMode', 'createEvent']),
     closeDialog() {
       this.setEditMode(false);
       this.setEvent(null);
-    }
-  }
+    },
+    submit() {
+      const params = {
+        name: this.name,
+        start: this.startDate,
+        end: this.endDate,
+      };
+      this.createEvent(params);
+      this.closeDialog();
+    },
+  },
 }
 </script>

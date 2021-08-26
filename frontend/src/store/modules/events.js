@@ -25,7 +25,7 @@ const getters = {
     start: new Date(state.event.start),
     end: new Date(state.event.end)
   } : null,
-
+  // 編集モードか状態を取得する。
   isEditMode: (state) => state.isEditMode,
 };
 
@@ -33,6 +33,7 @@ const getters = {
 const mutations = {
   setEvents: (state, events) => (state.events = events),
   setEvent: (state, event) => (state.event = event),
+  appendEvent: (state, event) => (state.events = [...state.events, event]),
   setEditMode: (state, boolean) => (state.isEditMode = boolean),
 };
 
@@ -41,6 +42,10 @@ const actions = {
   async fetchEvents({ commit }) {
     const response = await axios.get(`${apiUrl}/events`);
     commit('setEvents', response.data);
+  },
+  async createEvent({ commit }, event) {
+    const response = await axios.post(`${apiUrl}/events`, event);
+    commit('appendEvent', response.data);
   },
   setEvent({ commit }, event) {
     commit('setEvent', event);
