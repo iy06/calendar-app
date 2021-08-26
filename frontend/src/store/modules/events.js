@@ -6,6 +6,7 @@ const apiUrl = 'http://localhost:3000';
 const state = {
   events: [],
   event: null,
+  isEditMode: false,
 };
 
 // stateの値を取り出す関数を定義する
@@ -24,12 +25,15 @@ const getters = {
     start: new Date(state.event.start),
     end: new Date(state.event.end)
   } : null,
+
+  isEditMode: (state) => state.isEditMode,
 };
 
 // eventsデータをstateに保存する関数を定義する
 const mutations = {
   setEvents: (state, events) => (state.events = events),
   setEvent: (state, event) => (state.event = event),
+  setEditMode: (state, boolean) => (state.isEditMode = boolean),
 };
 
 // axiosでAPIリクエストを送信してeventsデータを取得し、mutationを呼び出す関数を定義する
@@ -41,6 +45,9 @@ const actions = {
   setEvent({ commit }, event) {
     commit('setEvent', event);
   },
+  setEditMode({ commit }, boolean) {
+    commit('setEditMode', boolean);
+  }
 };
 
 export default {

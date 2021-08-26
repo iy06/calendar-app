@@ -32,6 +32,7 @@
         @change="fetchEvents"
         locale="ja-jp"
         @click:event="showEvent"
+        @click:day="initEvent"
       />
     </v-sheet>
 
@@ -40,7 +41,8 @@
       @click:outside="closeDialog"
       width="600"
     >
-      <EventDetailDialog v-if="event !== null" />
+      <EventDetailDialog v-if="event !== null && !isEditMode" />
+      <EventFormDialog  v-if="event !== null && isEditMode" />
     </v-dialog>
   </div>
 </template>
@@ -49,11 +51,13 @@
 import { format } from 'date-fns';
 import { mapGetters, mapActions } from 'vuex';
 import EventDetailDialog from './EventDetailDialog.vue';
+import EventFormDialog from './EventFormDialog.vue';
 
 export default {
   name: 'Calendar',
   components: {
     EventDetailDialog,
+    EventFormDialog,
   },
   data() {
     return {
@@ -62,22 +66,32 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('events', ['events', 'event']),
+    ...mapGetters('events', ['events', 'event', 'isEditMode']),
     titleMonth() {
       return format(new Date(this.value), 'yyyy年M月');
     },
   },
   methods: {
-    ...mapActions('events', ['fetchEvents', 'setEvent']),
+    ...mapActions('events', ['fetchEvents', 'setEvent', 'setEditMode']),
     setToday() {
       this.value = format(new Date(), 'yyyy/MM/dd');
     },
-    showEvent({ event }) {
+    showEvent({ nativeEvent, event }) {
       this.setEvent(event);
+      nativeEvent.stopPropagation();
     },
     closeDialog() {
       this.setEvent(null);
-    }
+      this.setEditMode(false);
+    },
+    initEvent({ date }) {
+      console.log(date);
+      date = date.replace(/-/g, '/');
+      const start = format(new Date(date), 'yyyy/MM/dd 00:00:00');
+      const end = format(new Date(date), 'yyyy/MM/dd 01:00:00');
+      this.setEvent({ title: '', start, end, timed: true });
+      this.setEditMode(true)
+    },
   },
 };
 </script>
