@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { serializeEvent } from '../../functions/serializers';
 
 const apiUrl = 'http://localhost:3000';
 
@@ -11,20 +12,14 @@ const state = {
 
 // stateの値を取り出す関数を定義する
 const getters = {
-  //すべての予定をDate型に修正し取得する。
-  events: (state) => state.events.map((event) => {
-      return {
-        ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
-      };
-    }),
-  // クリックされた予定をDate型に修正し取得する。
-  event: (state) => state.event ? {
-    ...state.event,
-    start: new Date(state.event.start),
-    end: new Date(state.event.end)
-  } : null,
+  // events: (state) => {
+  //   state.events.map((event) => serializeEvent(event));
+  // },
+  // event: (state) => {
+  //   serializeEvent(state.event);
+  // },
+  events: state => state.events.map(event => serializeEvent(event)),
+  event: state => serializeEvent(state.event),
   // 編集モードか状態を取得する。
   isEditMode: (state) => state.isEditMode,
 };
@@ -52,7 +47,7 @@ const actions = {
   },
   setEditMode({ commit }, boolean) {
     commit('setEditMode', boolean);
-  }
+  },
 };
 
 export default {

@@ -14,5 +14,5 @@
 export default {
   name: 'DialogSection',
   props: ['icon', 'color'],
-}
+};
 </script>

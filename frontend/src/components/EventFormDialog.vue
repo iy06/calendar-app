@@ -11,7 +11,9 @@
       </DialogSection>
       <DialogSection icon="mid-clock-outline">
         <DateForm v-model="startDate" />
+        <TimeForm v-model="startTime" />
         <DateForm v-model="endDate" />
+        <TimeForm v-model="endTime" />
       </DialogSection>
     </v-card-text>
     <v-card-actions class="d-flex justify-end">
@@ -24,27 +26,33 @@
 import { mapGetters, mapActions } from 'vuex';
 import DialogSection from './DialogSection.vue';
 import DateForm from './DateForm.vue';
-import { format } from 'date-fns';
+import TimeForm from './TimeForm.vue';
 
 export default {
   name: 'EventFormDialog',
   components: {
     DialogSection,
     DateForm,
+    TimeForm,
   },
   data() {
     return {
       name: '',
       startDate: null,
       endDate: null,
-    }
+      startTime: null,
+      endTime: null,
+    };
   },
+  // コンポーネントが描画された時に文字列に変換した日時を代入する。
   created() {
-    this.startDate = format(this.event.start, 'yyyy/MM/dd');
-    this.endDate = format(this.event.end, 'yyyy/MM/dd');
+    this.startDate = this.event.startDate;
+    this.endDate = this.event.endDate;
+    this.startTime = this.event.startTime;
+    this.endTime = this.event.endTime;
   },
   computed: {
-    ...mapGetters('events', ['event'])
+    ...mapGetters('events', ['event']),
   },
   methods: {
     ...mapActions('events', ['setEvent', 'setEditMode', 'createEvent']),
@@ -55,12 +63,12 @@ export default {
     submit() {
       const params = {
         name: this.name,
-        start: this.startDate,
-        end: this.endDate,
+        start: `${ this.startDate } ${ this.startTime || '' }`,
+        end: `${ this.endDate } ${ this.endTime || '' }`,
       };
       this.createEvent(params);
       this.closeDialog();
     },
   },
-}
+};
 </script>

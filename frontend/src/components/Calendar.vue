@@ -1,25 +1,12 @@
 <template>
   <div>
     <v-sheet height="6vh" class="d-flex align-center">
-      <v-btn
-        outlined
-        small
-        class="ma-4"
-        @click="setToday"
-      >
-      本日
-      </v-btn>
-      <v-btn
-        icon
-        @click="$refs.calendar.prev()"
-      >
+      <v-btn outlined small class="ma-4" @click="setToday"> 本日 </v-btn>
+      <v-btn icon @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
       <v-toolbar-title>{{ titleMonth }}</v-toolbar-title>
-      <v-btn
-        icon
-        @click="$refs.calendar.next()"
-      >
+      <v-btn icon @click="$refs.calendar.next()">
         <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
     </v-sheet>
@@ -36,13 +23,9 @@
       />
     </v-sheet>
 
-    <v-dialog
-      :value="event !== null"
-      @click:outside="closeDialog"
-      width="600"
-    >
+    <v-dialog :value="event !== null" @click:outside="closeDialog" width="600">
       <EventDetailDialog v-if="event !== null && !isEditMode" />
-      <EventFormDialog  v-if="event !== null && isEditMode" />
+      <EventFormDialog v-if="event !== null && isEditMode" />
     </v-dialog>
   </div>
 </template>
@@ -85,12 +68,11 @@ export default {
       this.setEditMode(false);
     },
     initEvent({ date }) {
-      console.log(date);
       date = date.replace(/-/g, '/');
       const start = format(new Date(date), 'yyyy/MM/dd 00:00:00');
       const end = format(new Date(date), 'yyyy/MM/dd 01:00:00');
       this.setEvent({ title: '', start, end, timed: true });
-      this.setEditMode(true)
+      this.setEditMode(true);
     },
   },
 };
